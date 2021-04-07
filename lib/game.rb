@@ -19,7 +19,10 @@ class Game
       secret_word.chars
         .map { |char| letters_guessed.include?(char) ? char : "_" }
         .join(" ")
+
+    @letters_guessed.sort!
     puts "Word: >" + masked_word
+    puts "Letters guessed: >" + letters_guessed.join(" ")
     puts "Incorrect guesses remaining: #{guesses_remaining}"
   end
 end
