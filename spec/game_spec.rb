@@ -33,12 +33,12 @@ describe Game do
 
   describe "#display_game_state" do
     context "default game" do
-      before(:all) do
+      it "outputs all blank line for secret word, and outputs the incorrect moves remaining" do
         @game = Game.new
-      end
-
-      it "outputs the incorrect moves remaining" do
-        expect {@game.display_game_state}.to output("Incorrect guesses remaining: 6\n").to_stdout
+        @secret_word = @game.secret_word
+        expect {@game.display_game_state}
+          .to output("Word: >#{("_"*@secret_word.length).split("").join(" ")}\n" \
+                     "Incorrect guesses remaining: 6\n").to_stdout
       end
     end
   end
