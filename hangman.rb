@@ -57,6 +57,7 @@ loop do
       if save.match(/[[:digit:]]/)
         save = names[(save.to_i) - 1]
       end
+
       save_file = File.open("./saves/" + save + ".json", "r")
       loaded = JSON.parse(save_file.read)
       save_file.close
