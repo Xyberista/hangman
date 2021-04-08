@@ -38,6 +38,12 @@ class Game
   end
 
   def make_guess
+    guess = get_guess
 
+    unless @secret_word.include?(guess)
+      @guesses_remaining -= 1
+    end
+
+    @letters_guessed.push(guess)
   end
 end

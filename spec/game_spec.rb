@@ -122,13 +122,10 @@ describe Game do
         allow($stdin).to receive(:gets).and_return("h")
         @game.make_guess
 
-        expect(@game.guesses_remaining).to eq(original_remaining)
+        expect(@game.guesses_remaining).to eq(@original_remaining)
       end
 
       it "letter added to letters_guessed" do
-        allow($stdin).to receive(:gets).and_return("h")
-        @game.make_guess
-
         expect(@game.letters_guessed.length).to eq(1)
       end
     end
