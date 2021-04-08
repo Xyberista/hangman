@@ -7,6 +7,7 @@ end
 # game loop
 loop do
   clear
+  memory.push(ObjectSpace.each_object(Object).count)
   puts "Options:"
   puts "1. Load save game."
   puts "2. Start new game."
@@ -31,7 +32,7 @@ loop do
       puts
       puts "Press enter to continue"
 
-      @stdin.gets
+      $stdin.gets
 
       next
     else
