@@ -7,7 +7,6 @@ end
 # game loop
 loop do
   clear
-  memory.push(ObjectSpace.each_object(Object).count)
   puts "Options:"
   puts "1. Load save game."
   puts "2. Start new game."
