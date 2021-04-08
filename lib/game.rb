@@ -26,10 +26,11 @@ class Game
   end
 
   def get_guess
-    puts "What is your guess?"
+    puts "Enter a letter to guess, and the word 'save' to save the game"
     print ">"
     guess = $stdin.gets.chomp
     until guess.scan(/[a-zA-Z]/).length == 1 && !@letters_guessed.include?(guess)
+      break if guess.match(/save/)
       if @letters_guessed.include?(guess)
         puts "Please enter a new letter"
       else
@@ -44,19 +45,61 @@ class Game
   def make_guess
     guess = get_guess
 
-    unless @secret_word.include?(guess)
-      @guesses_remaining -= 1
-    end
+    if guess != "save"
+      unless @secret_word.include?(guess)
+        @guesses_remaining -= 1
+      end
 
-    @letters_guessed.push(guess)
+      @letters_guessed.push(guess)
+      return 0
+    else
+      return 1
+    end
   end
 
   def play
     game_won = false
     until game_won || @guesses_remaining == 0
       display_game_state
-      make_guess
+      choice = make_guess
+      if choice == 1
+        puts "Enter save name:"
+        print ">"
+        save_name = gets.chomp
+
+        Dir.mkdir("saves") unless File.directory?("saves")
+
+        if File.exists?("./saves/" + save_name + ".json")
+          puts "#{save_name} already exists. Would you like to replace it? (y/n)"
+          print ">"
+          replace = gets.chomp
+          until replace.match(/(y|n)/)
+            puts "Please enter 'y' or 'n'"
+            print ">"
+            replace = gets.chomp
+          end
+
+          save_name = "./saves/" + save_name + ".json"
+
+          if replace == "y"
+            save_file = File.open(save_name, "w")
+            save_file.write(self.to_json)
+            save_file.close
+          else
+            redo
+          end
+        else
+          save_name = "./saves/" + save_name + ".json"
+          save_file = File.new(save_name, "w")
+          save_file.write(self.to_json)
+          save_file.close
+        end
+
+        break
+      end
     end
+    
+    return if choice == 1
 
     if game_won
       puts "Congratulations! You won!"
