@@ -1,12 +1,21 @@
 require_relative 'lib/game'
 
+# enable garbage collection for the program
+GC.enable
+
 def clear
   system("clear") || system("cls")
 end
 
+# Uncomment the lines relating to memory to have debug output at end of program for memory
+# memory = []
+
 # game loop
 loop do
   clear
+  
+  # memory.push(ObjectSpace.each_object(Object).count)
+
   puts "Options:"
   puts "1. Load save game."
   puts "2. Start new game."
@@ -86,4 +95,10 @@ loop do
   when "3", "quit"
     break
   end
+
+  # garbage collection
+  GC.start
+
 end
+
+# puts memory
