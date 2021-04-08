@@ -57,6 +57,14 @@ class Game
     end
   end
 
+  def json_info
+    data = {
+      secret_word: @secret_word,
+      guesses_remaining: @guesses_remaining,
+      letters_guessed: @letters_guessed
+    }
+  end
+
   def play
     game_won = false
     until game_won || @guesses_remaining == 0
@@ -83,7 +91,7 @@ class Game
 
           if replace == "y"
             save_file = File.open(save_name, "w")
-            save_file.write(self.to_json)
+            save_file.write(JSON.pretty_generate(self.json_info))
             save_file.close
           else
             redo
@@ -91,7 +99,7 @@ class Game
         else
           save_name = "./saves/" + save_name + ".json"
           save_file = File.new(save_name, "w")
-          save_file.write(self.to_json)
+          save_file.write(JSON.pretty_generate(self.json_info))
           save_file.close
         end
 

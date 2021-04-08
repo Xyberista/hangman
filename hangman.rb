@@ -17,7 +17,7 @@ loop do
   choice = $stdin.gets.chomp.downcase
   until choice.match(/1|2|3|save|new|quit/)
     puts "Please enter a valid choice"
-    puts "Choices: (1/2/save/new)"
+    puts "Choices: (1/2/3/load/new/quit)"
     print ">"
     choice = $stdin.gets.chomp.downcase
   end
@@ -46,11 +46,42 @@ loop do
       # prints each name on a new line with name number
       puts "Saves:"
       names.each_with_index { |name, index| puts "#{index + 1}. #{name}" }
-      break
+
+      puts
+      puts "What is the save name/number?"
+      save = $stdin.gets.chomp.downcase
+      until save.match(/[1-#{names.length}]/) || names.include?(save)
+        save = $stdin.gets.chomp.downcase
+      end
+      
+      if save.match(/[[:digit:]]/)
+        save = names[(save.to_i) - 1]
+      end
+      save_file = File.open("./saves/" + save + ".json", "r")
+
+      loaded = JSON.parse(save_file.read)
+      
+      clear
+
+      game = Game.new
+      game.guesses_remaining = loaded["guesses_remaining"]
+      game.secret_word = loaded["secret_word"]
+      game.letters_guessed = loaded["letters_guessed"]
+      game.play
+
+      puts
+      puts "Press enter to continue."
+      $stdin.gets
     end
-  when "2", "save"
+  when "2", "new"
+    clear
+
     game = Game.new
     game.play
+
+    puts
+    puts "Press enter to continue."
+    $stdin.gets
   when "3", "quit"
     break
   end
