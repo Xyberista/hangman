@@ -18997,12 +18997,7 @@ faerie
 Faeroe
 Faeroese
 faery
-fag
-faggot
-faggoting
 Fagin
-fagot
-fagoting
 Fahd
 Fahrenheit
 faience
@@ -36002,10 +35997,6 @@ Niger
 Nigeria
 Nigerian
 Nigerien
-niggard
-niggardliness
-niggardly
-nigger
 niggle
 niggler
 niggling
