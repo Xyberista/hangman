@@ -20,9 +20,24 @@ class Game
         .map { |char| letters_guessed.include?(char) ? char : "_" }
         .join(" ")
 
-    @letters_guessed.sort!
     puts "Word: >" + masked_word
     puts "Letters guessed: >" + letters_guessed.join(" ")
     puts "Incorrect guesses remaining: #{guesses_remaining}"
+  end
+
+  def get_guess
+    puts "What is your guess?"
+    print ">"
+    guess = $stdin.gets.chomp
+    until guess.match(/[a-zA-Z]/)
+      puts "Please enter a letter."
+      print ">"
+      guess = $stdin.gets.chomp
+    end
+    guess.downcase
+  end
+
+  def make_guess
+
   end
 end

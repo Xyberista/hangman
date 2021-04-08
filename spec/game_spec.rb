@@ -57,6 +57,8 @@ describe Game do
       it "some unmasked, letters guessed, and moves remaining." do
         @game = Game.new
         @game.letters_guessed = [@game.secret_word.chars.sample]
+        @game.letters_guessed.push(@game.secret_word.chars.sample)
+        @game.guesses_remaining = 3
 
         # masked word with currently guessed unmasked
         expect($stdout).to receive(:puts)
@@ -66,14 +68,68 @@ describe Game do
         
         # the letters that are guessed
         expect($stdout).to receive(:puts)
-          .with("Letters guessed: >#{@game.letters_guessed.sort.join(" ")}")
+          .with("Letters guessed: >#{@game.letters_guessed.join(" ")}")
 
         # the amount of incorrect guesses remaining
         expect($stdout).to receive(:puts)
-          .with("Incorrect guesses remaining: 6")
+          .with("Incorrect guesses remaining: 3")
 
         # call display game state method
         @game.display_game_state
+      end
+    end
+  end
+
+  describe "#get_guess" do
+    before(:context) do
+      @game = Game.new
+    end
+
+    context "correct guess format first try" do
+      it "returns guess as a lowercase letter" do
+        allow($stdin).to receive(:gets).and_return("a")
+        expect(@game.get_guess).to eq("a")
+      end
+    end
+    
+    context "correct guess format first try upper case" do
+      it "returns guess as a lowercase letter" do
+        allow($stdin).to receive(:gets).and_return("A")
+        expect(@game.get_guess).to eq("a")
+      end
+    end
+    
+    context "incorrect guess format first try, correct second try" do
+      it "returns guess as a lowercase letter" do
+        allow($stdin).to receive(:gets).and_return("8", "a")
+        expect(@game.get_guess).to eq("a")
+      end
+    end
+  end
+
+  describe "#make_guess" do
+    before(:context) do
+      @game = Game.new
+      @original_remaining = @game.guesses_remaining
+    end
+
+    context "correct guess" do
+      before(:all) do
+        @game.secret_word = "house"
+      end
+
+      it "guesses remaining doesn't change" do
+        allow($stdin).to receive(:gets).and_return("h")
+        @game.make_guess
+
+        expect(@game.guesses_remaining).to eq(original_remaining)
+      end
+
+      it "letter added to letters_guessed" do
+        allow($stdin).to receive(:gets).and_return("h")
+        @game.make_guess
+
+        expect(@game.letters_guessed.length).to eq(1)
       end
     end
   end
