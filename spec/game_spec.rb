@@ -32,13 +32,37 @@ describe Game do
   end
 
   describe "#display_game_state" do
-    context "default game" do
+    context "default start of game" do
       it "output masked word, letters guessed, and incorrect guesses remaining" do
         @game = Game.new
 
         # masked word with currently guessed unmasked
         expect($stdout).to receive(:puts)
           .with("Word: >#{("_"*@game.secret_word.length).split("").join(" ")}")
+        
+        # the letters that are guessed
+        expect($stdout).to receive(:puts)
+          .with("Letters guessed: >#{@game.letters_guessed.sort.join(" ")}")
+
+        # the amount of incorrect guesses remaining
+        expect($stdout).to receive(:puts)
+          .with("Incorrect guesses remaining: 6")
+
+        # call display game state method
+        @game.display_game_state
+      end
+    end
+
+    context "some letters already guessed" do
+      it "some unmasked, letters guessed, and moves remaining." do
+        @game = Game.new
+        @game.letters_guessed = [@game.secret_word.chars.sample]
+
+        # masked word with currently guessed unmasked
+        expect($stdout).to receive(:puts)
+          .with("Word: >" + @game.secret_word.chars
+          .map { |char| @game.letters_guessed.include?(char) ? char : "_" }
+          .join(" "))
         
         # the letters that are guessed
         expect($stdout).to receive(:puts)
