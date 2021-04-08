@@ -25,6 +25,7 @@ loop do
   case choice
   when "1", "load"
     saves = Dir["./saves/*"]
+
     if saves == []
       puts "You have no saves to load."
       puts
@@ -34,6 +35,18 @@ loop do
 
       next
     else
+      names = []
+      
+      saves.each do |save|
+        names.push(save.scan(/(.\/saves\/)(.*)(.json)/)[0][1])
+      end
+
+      clear
+
+      # prints each name on a new line with name number
+      puts "Saves:"
+      names.each_with_index { |name, index| puts "#{index + 1}. #{name}" }
+      break
     end
   when "2", "save"
     game = Game.new
