@@ -29,8 +29,12 @@ class Game
     puts "What is your guess?"
     print ">"
     guess = $stdin.gets.chomp
-    until guess.match(/[a-zA-Z]/)
-      puts "Please enter a letter."
+    until guess.scan(/[a-zA-Z]/).length == 1 && !@letters_guessed.include?(guess)
+      if @letters_guessed.include?(guess)
+        puts "Please enter a new letter"
+      else
+        puts "Please enter a letter."
+      end
       print ">"
       guess = $stdin.gets.chomp
     end
@@ -45,5 +49,19 @@ class Game
     end
 
     @letters_guessed.push(guess)
+  end
+
+  def play
+    game_won = false
+    until game_won || @guesses_remaining == 0
+      display_game_state
+      make_guess
+    end
+
+    if game_won
+      puts "Congratulations! You won!"
+    else
+      puts "Sorry, you did not guess the word. The correct word was: #{@secret_word}"
+    end
   end
 end

@@ -1,5 +1,11 @@
 require 'game'
 
+RSpec.configure do |configure|
+  configure.before do
+    allow($stdout).to receive(:write)
+  end
+end
+
 describe Game do
   describe "#initialize" do
     context "default settings" do
@@ -105,6 +111,20 @@ describe Game do
         expect(@game.get_guess).to eq("a")
       end
     end
+
+    context "multiple letters as first try, correct second try" do
+      it "returns only second guess as lowercase letter" do
+        allow($stdin).to receive(:gets).and_return("aa", "a")
+        expect(@game.get_guess).to eq("a")
+      end
+    end
+
+    context "capital letter" do
+      it "returns lowercase version of letter" do
+        allow($stdin).to receive(:gets).and_return("A")
+        expect(@game.get_guess).to eq("a")
+      end
+    end
   end
 
   describe "#make_guess" do
@@ -127,6 +147,23 @@ describe Game do
 
       it "letter added to letters_guessed" do
         expect(@game.letters_guessed.length).to eq(1)
+      end
+    end
+    
+    context "incorrect guess" do
+      before(:all) do
+        @game.secret_word = "house"
+      end
+
+      it "guesses remaining decreases by one" do
+        allow($stdin).to receive(:gets).and_return("a")
+        @game.make_guess
+
+        expect(@game.guesses_remaining).to eq(@original_remaining - 1)
+      end
+
+      it "letter added to letters_guessed" do
+        expect(@game.letters_guessed.length).to eq(2)
       end
     end
   end
