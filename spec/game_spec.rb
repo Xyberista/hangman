@@ -1,5 +1,10 @@
 require 'game'
 
+word_file = File.open("word_list.txt", "r")
+word_list = word_file.read.split("\n")
+word_list.select! { |word| (5..12).include?(word.length) }
+word_file.close
+
 RSpec.configure do |configure|
   configure.before do
     allow($stdout).to receive(:write)
@@ -10,7 +15,7 @@ describe Game do
   describe "#initialize" do
     context "default settings" do
       before(:all) do
-        @game = Game.new
+        @game = Game.new(game_word_list = word_list)
       end
 
       it "a word between 5 and 12 characters is selected" do
@@ -24,7 +29,7 @@ describe Game do
 
     context "custom configuration (10 guesses)" do
       before(:all) do
-        @game = Game.new(10)
+        @game = Game.new(10, word_list)
       end
 
       it "a word between 5 and 12 characters is selected" do
@@ -40,7 +45,7 @@ describe Game do
   describe "#display_game_state" do
     context "default start of game" do
       it "output masked word, letters guessed, and incorrect guesses remaining" do
-        @game = Game.new
+        @game = Game.new(game_word_list = word_list)
 
         # masked word with currently guessed unmasked
         expect($stdout).to receive(:puts)
@@ -61,7 +66,7 @@ describe Game do
 
     context "some letters already guessed" do
       it "some unmasked, letters guessed, and moves remaining." do
-        @game = Game.new
+        @game = Game.new(game_word_list = word_list)
         @game.letters_guessed = [@game.secret_word.chars.sample]
         @game.letters_guessed.push(@game.secret_word.chars.sample)
         @game.guesses_remaining = 3
@@ -88,7 +93,7 @@ describe Game do
 
   describe "#get_guess" do
     before(:context) do
-      @game = Game.new
+      @game = Game.new(game_word_list = word_list)
     end
 
     context "correct guess format first try" do
@@ -129,7 +134,7 @@ describe Game do
 
   describe "#make_guess" do
     before(:context) do
-      @game = Game.new
+      @game = Game.new(game_word_list = word_list)
       @original_remaining = @game.guesses_remaining
     end
 

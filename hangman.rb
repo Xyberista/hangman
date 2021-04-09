@@ -10,6 +10,11 @@ end
 # Uncomment the lines relating to memory to have debug output at end of program for memory
 # memory = []
 
+word_file = File.open("word_list.txt", "r")
+word_list = word_file.read.split("\n")
+word_list.select! { |word| (5..12).include?(word.length) }
+word_file.close
+
 # game loop
 loop do
   clear
@@ -86,7 +91,7 @@ loop do
   when "2", "new"
     clear
 
-    game = Game.new
+    game = Game.new(game_word_list = word_list)
     game.play
 
     puts
