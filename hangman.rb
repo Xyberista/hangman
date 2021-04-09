@@ -22,9 +22,10 @@ loop do
   # memory.push(ObjectSpace.each_object(Object).count)
 
   puts "Options:"
+  puts ""
   puts "1. Load save game."
   puts "2. Start new game."
-  puts "3. Quit game"
+  puts "3. Quit game."
   puts
 
   print ">"
@@ -91,7 +92,19 @@ loop do
   when "2", "new"
     clear
 
-    game = Game.new(game_word_list = word_list)
+    puts "Max amount of guesses (press Enter for default of 6):"
+    print ">"
+    amount = $stdin.gets.chomp
+    until (amount.match(/\A\d+\z/) && (amount.to_i) > 0) || amount == ""
+      puts "Please enter a positive number."
+      puts
+      print ">"
+      amount = $stdin.gets.chomp
+    end
+
+    guesses = amount == "" ? 6 : amount.to_i
+
+    game = Game.new(guesses, game_word_list = word_list)
     game.play
 
     puts

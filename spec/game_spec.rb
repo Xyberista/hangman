@@ -50,6 +50,7 @@ describe Game do
         # masked word with currently guessed unmasked
         expect($stdout).to receive(:puts)
           .with("Word: >#{("_"*@game.secret_word.length).split("").join(" ")}")
+        expect($stdout).to receive(:puts).with("")
         
         # the letters that are guessed
         expect($stdout).to receive(:puts)
@@ -76,6 +77,7 @@ describe Game do
           .with("Word: >" + @game.secret_word.chars
           .map { |char| @game.letters_guessed.include?(char) ? char : "_" }
           .join(" "))
+        expect($stdout).to receive(:puts).with("")
         
         # the letters that are guessed
         expect($stdout).to receive(:puts)
@@ -128,6 +130,20 @@ describe Game do
       it "returns lowercase version of letter" do
         allow($stdin).to receive(:gets).and_return("A")
         expect(@game.get_guess).to eq("a")
+      end
+    end
+
+    context "extra character first time" do
+      it "returns second time's correct letter" do
+        allow($stdin).to receive(:gets).and_return("a'", "w")
+        expect(@game.get_guess).to eq("w")
+      end
+    end
+
+    context "extra number first time" do
+      it "returns second time's correct letter" do
+        allow($stdin).to receive(:gets).and_return("a8", "e")
+        expect(@game.get_guess).to eq("e")
       end
     end
   end

@@ -4,7 +4,6 @@ class Game
   attr_accessor :secret_word, :guesses_remaining, :letters_guessed
 
   def initialize(max_guesses = 6, game_word_list)
-
     @secret_word = game_word_list.sample
     @guesses_remaining = max_guesses
     @letters_guessed = []
@@ -17,6 +16,7 @@ class Game
         .join(" ")
 
     puts "Word: >" + masked_word
+    puts ""
     puts "Letters guessed: >" + letters_guessed.join(" ")
     puts "Incorrect guesses remaining: #{guesses_remaining}"
   end
@@ -25,7 +25,7 @@ class Game
     puts "Enter a letter to guess, and the word 'save' to save the game"
     print ">"
     guess = $stdin.gets.chomp
-    until guess.scan(/[a-zA-Z]/).length == 1 && !@letters_guessed.include?(guess)
+    until guess.scan(/\A[a-zA-Z]\z/).length == 1 && !@letters_guessed.include?(guess)
       break if guess.match(/save/)
       if @letters_guessed.include?(guess)
         puts "Please enter a new letter"
@@ -35,7 +35,8 @@ class Game
       print ">"
       guess = $stdin.gets.chomp
     end
-    guess.downcase
+
+    guess.match(/save/) ? "save" : guess.downcase
   end
 
   def make_guess
@@ -64,7 +65,12 @@ class Game
   def play
     game_won = false
     until game_won || @guesses_remaining == 0
+      system("clear") || system("cls")
+      puts "\n"
+
       display_game_state
+      puts ""
+
       choice = make_guess
       if choice == 1
         puts "Enter save name:"
@@ -101,13 +107,17 @@ class Game
 
         break
       end
+
+      game_won = secret_word.chars.all? { |char| letters_guessed.include?(char)}
     end
     
     return if choice == 1
 
     if game_won
-      puts "Congratulations! You won!"
+      puts ""
+      puts "Congratulations! You won! The word was #{seret_word}"
     else
+      puts ""
       puts "Sorry, you did not guess the word. The correct word was: #{@secret_word}"
     end
   end
